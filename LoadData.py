@@ -21,7 +21,15 @@ test_data_path = path.get("test data path")
 raw_data_path = path.get("raw data path")
 
 class NumpyDrawingsDataset(Dataset):
+    """Numpy drawing dataset"""
+
     def __init__(self, root_dir, transform=None):
+        """
+        Arguments:
+            root_dir (string): Directory with all the images.
+            transform (callable, optional): Optional transform to be applied
+            on a sample.
+        """
 
         self.root_dir = root_dir
         self.transform = transform
@@ -43,9 +51,11 @@ class NumpyDrawingsDataset(Dataset):
         self.data_labels = np.concatenate(self.data_labels, axis=0)        
 
     def __len__(self):
+        """Returns the size of dataset"""
         return len(self.data)
 
     def __getitem__(self, idx):
+        """ Support the indexing such that dataset[i] can be used to get i(th) sample"""
         data = self.data[idx]
         data_labels = self.data_labels[idx]
 

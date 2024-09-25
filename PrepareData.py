@@ -36,6 +36,13 @@ def NumberOfDrawings(drawings):
 
 def SelectData(drawings):
 
+    """
+    Arguments:
+        drawings (numpy.ndarray): Numpy array containing arrays of shape (784, ).
+    Returns:
+        3 datasets with coresponding percent size of whole data, every with randomly choosed drawings    
+    """
+
     training_data = np.random.choice(drawings.shape[0], math.floor(NumberOfDrawings(drawings)*0.6), False)
     validation_data = np.random.choice(drawings.shape[0], math.floor(NumberOfDrawings(drawings)*0.2), False)
     test_data = np.random.choice(drawings.shape[0], math.floor(NumberOfDrawings(drawings)*0.2), False)
@@ -43,6 +50,20 @@ def SelectData(drawings):
     return training_data, validation_data, test_data
 
 def SaveData(drawings, train, val, test, train_path, val_path, test_path, file_name):
+    """
+    Saves selected data into choosen folders
+
+    Arguments:
+        drawings (numpy.ndarray): Numpy array containing arrays of shape (784, ).
+        train (numpy.ndarray): Numpy array containing arrays of shape (784, ) for training dataset.
+        val (numpy.ndarray): Numpy array containing arrays of shape (784, ) for validating dataset.
+        test (numpy.ndarray): Numpy array containing arrays of shape (784, ) for testing dataset.
+
+        train_path (string): Path for folder where training dataset will be stored.
+        val_path (string): Path for folder where validating dataset will be stored.
+        test_path (string): Path for folder where testing dataset will be stored.   
+    """
+
     train_output = drawings[train]
     val_output = drawings[val]
     test_output = drawings[test]
@@ -52,6 +73,12 @@ def SaveData(drawings, train, val, test, train_path, val_path, test_path, file_n
     np.save(os.path.join(test_path, file_name_without_ext + '_test.npy'), test_output)
 
 def SeparateFiles(input_directory):
+    """
+    Separetes data from given directory into 3 sets of data and saves them into new coresponding directores, orginal directory is unchanged.
+
+    Arguments:
+        drawings (numpy.ndarray): Numpy array containing arrays of shape (784, ).    
+    """
     directory = os.fsencode(input_directory)
     
     for file in os.listdir(directory):

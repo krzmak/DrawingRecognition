@@ -19,8 +19,8 @@ print(f"test data path: {test_data_path}")
 print(f"raw data path: {raw_data_path}")
 
 def LoadNumpyFile(file):
-    data = np.load(file, mmap_mode='r')
+    data = np.load(file)
     return data
 
 dat = LoadNumpyFile(training_data_path + '/' + 'full_numpy_bitmap_airplane_train.npy')
-print(np.shape(dat))
+print(np.shape(dat[1]))
