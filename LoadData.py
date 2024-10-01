@@ -76,15 +76,19 @@ print(training_dataset.data[2])
 print(np.shape(training_dataset.data[1]))
 
 
-def show_transformed_images(dataset):
-    loader = torch.utils.data.DataLoader(dataset, batch_size=6, shuffle=True)
+def show_images_of_given_label(dataset, label):
+    batch_size = 1024
+    loader = torch.utils.data.DataLoader(dataset, batch_size, shuffle=True)
     batch = next(iter(loader))
     images, labels = batch
+    img = []
 
-    grid = torchvision.utils.make_grid(images, nrow = 3)
+    for i in range(batch_size):
+        if labels[i] == label:
+            img.append(images[i])
+    grid = torchvision.utils.make_grid(img, nrow = 5)
     plt.figure(figsize=(11,11))
     plt.imshow(np.transpose(grid, (1,2,0)))
     plt.show()
-    print('labels:' , labels)
-
-show_transformed_images(training_dataset)
+    
+show_images_of_given_label(training_dataset, 4)

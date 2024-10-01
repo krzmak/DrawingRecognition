@@ -29,23 +29,27 @@ def NumberOfDrawings(drawings):
     numberofdrawings =  np.size(drawings)//(1*784)
     return numberofdrawings
 
-# data sets
-# training data = 60 %
-# validation data = 20 %
-# test data = 20 % 
-
 def SelectData(drawings):
 
     """
     Arguments:
         drawings (numpy.ndarray): Numpy array containing arrays of shape (784, ).
     Returns:
-        3 datasets with coresponding percent size of whole data, every with randomly choosed drawings    
+        3 datasets with coresponding size, every with randomly choosed drawings    
     """
 
-    training_data = np.random.choice(drawings.shape[0], math.floor(NumberOfDrawings(drawings)*0.6), False)
-    validation_data = np.random.choice(drawings.shape[0], math.floor(NumberOfDrawings(drawings)*0.2), False)
-    test_data = np.random.choice(drawings.shape[0], math.floor(NumberOfDrawings(drawings)*0.2), False)
+    number_of_train = 50000
+    number_of_val = 5000
+    number_of_test = 5000
+
+    number_of_data = number_of_train + number_of_val + number_of_test
+
+    random_samples = np.random.permutation(number_of_data)
+
+    
+    training_data = random_samples[:number_of_train]
+    validation_data = random_samples[number_of_train:number_of_train + number_of_val]
+    test_data = random_samples[number_of_train + number_of_val:]
 
     return training_data, validation_data, test_data
 
