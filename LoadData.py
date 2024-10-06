@@ -59,7 +59,7 @@ class NumpyDrawingsDataset(Dataset):
         data = self.data[idx]
         data_labels = self.data_labels[idx]
 
-        data = data.reshape(28,28)
+        data = data.reshape(64,64)
 
         if self.transform:
             data = self.transform(data)
