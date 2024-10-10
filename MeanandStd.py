@@ -12,13 +12,15 @@ import math
 import os
 import json
 
-with open('configuration.json', 'r') as config:
+with open('test_configuration.json', 'r') as config:
     path = json.load(config)
 
 training_data_path = path.get("trainig data path")
 validation_data_path = path.get("validation data path")
 test_data_path = path.get("test data path")
 raw_data_path = path.get("raw data path")
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 class NumpyDrawingsDataset(Dataset):
     """Numpy drawing dataset"""
@@ -71,15 +73,32 @@ data_transforms = transforms.Compose([
 ])
 
 training_dataset = NumpyDrawingsDataset(training_data_path, transform= data_transforms)
-validation_dataset = NumpyDrawingsDataset(validation_data_path, transform= data_transforms)
-testing_dataset = NumpyDrawingsDataset(test_data_path, transform= data_transforms)
 
-print(training_dataset.data[2])
-print(np.shape(training_dataset.data[1]))
+training_loader = torch.utils.data.DataLoader(training_dataset, batch_size=64, shuffle=True)
 
+def calculate_mean_and_std(loader):
+    """
+        Orginal function: 
+    """
+    mean = 0.
+    std = 0.
+    total_number_of_drawings = 0
+
+    for drawings, _ in loader:
+        number_of_drawings_in_batch = drawings.size(0)
+        drawings = drawings.view(number_of_drawings_in_batch, drawings.size(1), -1)
+        mean += drawings.mean(2).sum(0)
+        std += drawings.std(2).sum(0)
+        total_number_of_drawings += number_of_drawings_in_batch
+
+    mean /= total_number_of_drawings
+    std /= total_number_of_drawings
+
+
+    return mean, std
 
 def show_images_of_given_label(dataset, label):
-    batch_size = 1024
+    batch_size = 64
     loader = torch.utils.data.DataLoader(dataset, batch_size, shuffle=True)
     batch = next(iter(loader))
     images, labels = batch
@@ -93,4 +112,4 @@ def show_images_of_given_label(dataset, label):
     plt.imshow(np.transpose(grid, (1,2,0)))
     plt.show()
     
-show_images_of_given_label(training_dataset, 4)
+print(calculate_mean_and_std(training_loader))

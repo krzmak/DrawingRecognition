@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import os
 import json
 
-with open('configuration.json', 'r') as config:
+with open('test_configuration.json', 'r') as config:
     location = json.load(config)
 
 training_data_path = location.get("trainig data path")
@@ -38,9 +38,9 @@ def SelectData(drawings):
         3 datasets with coresponding size, every with randomly choosed drawings    
     """
 
-    number_of_train = 50000
-    number_of_val = 5000
-    number_of_test = 5000
+    number_of_train = 2000
+    number_of_val = 200
+    number_of_test = 200
 
     number_of_data = number_of_train + number_of_val + number_of_test
 

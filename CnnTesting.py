@@ -12,13 +12,16 @@ import math
 import os
 import json
 
-with open('configuration.json', 'r') as config:
+with open('test_configuration.json', 'r') as config:
     path = json.load(config)
 
 training_data_path = path.get("trainig data path")
 validation_data_path = path.get("validation data path")
 test_data_path = path.get("test data path")
 raw_data_path = path.get("raw data path")
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 
 class NumpyDrawingsDataset(Dataset):
     """Numpy drawing dataset"""
@@ -66,8 +69,12 @@ class NumpyDrawingsDataset(Dataset):
 
         return data, data_labels
 
+mean = [0.1971]
+std = [0.3692]
+
 data_transforms = transforms.Compose([
     transforms.ToTensor(),
+    transforms.Normalize(torch.tensor(mean),torch.tensor(std))
 ])
 
 training_dataset = NumpyDrawingsDataset(training_data_path, transform= data_transforms)
@@ -78,8 +85,25 @@ print(training_dataset.data[2])
 print(np.shape(training_dataset.data[1]))
 
 
+"""class CnnModel(nn.Module):
+
+    def __init__(self, number_of_classes = 4):
+        super().__init__()
+        self.conv1 = nn.Conv2d(1, 64, kernel_size=5, stride=1, padding=2)
+        self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
+        self.conv2 = nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1)
+        self.conv3 = nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1)
+        self.pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
+        self.fc1 = nn.Linear(128 * 16 * 16, 512)
+        self.fc2 = nn.Linear(512, num_classes)
+
+
+    def forward(self, x):
+
+    """
+
 def show_images_of_given_label(dataset, label):
-    batch_size = 1024
+    batch_size = 64
     loader = torch.utils.data.DataLoader(dataset, batch_size, shuffle=True)
     batch = next(iter(loader))
     images, labels = batch
@@ -93,4 +117,4 @@ def show_images_of_given_label(dataset, label):
     plt.imshow(np.transpose(grid, (1,2,0)))
     plt.show()
     
-show_images_of_given_label(training_dataset, 4)
+show_images_of_given_label(training_dataset, 1)

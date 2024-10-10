@@ -1,2 +1,5 @@
 cnn_data/
 configuration.json
+test_configuration.json
+testing/
+test.py
