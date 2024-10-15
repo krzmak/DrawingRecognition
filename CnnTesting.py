@@ -110,112 +110,47 @@ class CnnModel(nn.Module):
         x = self.fc3(x)
         return x 
 
-cnn_model = CnnModel(number_of_classes=4)
-cnn_model = cnn_model.to(device)
-loss_fn = nn.CrossEntropyLoss()
-optimizer = optim.SGD(cnn_model.parameters(), lr=0.001, momentum=0.9, weight_decay=0.003)
+def train_network(model, number_of_epoch, train_loader, optimizer, loss_fn):
 
-def train_nn(model, train_loader, val_loader, criterion, optimizer, n_epochs=20):
-    best_acc = 0
+    for epoch in range(number_of_epoch):
 
-    for epoch in range(n_epochs):
-        print("Epoch number %d " % (epoch + 1))
         model.train()
-        running_loss = 0.0
-        running_correct = 0.0
+
+        total_loss = 0.0
+        total_acc = 0.0
         total = 0
+
         for data in train_loader:
-            images, labels = data
-            images = images.to(device)
+
+            drawings, labels = data
+            drawings = drawings.to(device)
             labels = labels.type(torch.LongTensor)
             labels = labels.to(device)
             total += labels.size(0)
 
             optimizer.zero_grad()
 
-            outputs = model(images)
+            outputs = model(drawings)
 
-            _, predicted = torch.max(outputs.data, 1)
-
-            loss = criterion(outputs, labels)
-            
+            loss = loss_fn(outputs, labels)
             loss.backward()
 
             optimizer.step()
 
-            running_loss += loss.item()
-            running_correct += (labels == predicted).sum().item()
+            total_loss += loss.item()
 
-        epoch_loss = running_loss / len(train_loader)
-        epoch_acc = 100 * running_correct / total
-
-        print("         -Training dataset. Got %d out of %d images correctly (%.3f%%). Epoch loss: %.3f" % (running_correct, total, epoch_acc, epoch_loss))
-
-        test_dataset_acc = evaluate_model_on_test_set(model, val_loader)
-
-        if test_dataset_acc > best_acc:
-            best_acc = test_dataset_acc
-            save_checkpoint(model, epoch, optimizer, best_acc)
-
-    print("Finished")
-    return model
-
-def evaluate_model_on_test_set(model, val_loader):
-    model.eval()
-    predicted_correctly_on_epoch = 0
-    total = 0
-
-    with torch.no_grad():
-        for data in val_loader:
-            images, labels = data
-            labels = labels.type(torch.LongTensor)
-            images = images.to(device)
-            labels = labels.to(device)
-            total += labels.size(0)
-
-            outputs = model(images)
-            
             _, predicted = torch.max(outputs.data, 1)
 
-            predicted_correctly_on_epoch += (predicted == labels).sum().item()
+            total_acc += (labels == predicted).sum().item()
 
-    epoch_acc = 100.0 * predicted_correctly_on_epoch / total
+        epoch_loss = total_loss / len(train_loader)
+        epoch_acc = 100 * total_acc / total
 
-    print("         -Validation dataset. Got %d of %d images correctly ((%.3f%%)" % (predicted_correctly_on_epoch, total, epoch_acc))
+        print("         -Training dataset. Got %d out of %d images correctly (%.3f%%). Epoch loss: %.3f" % (total_acc, total, epoch_acc, epoch_loss))
 
-    return epoch_acc
-
-def save_checkpoint(model, epoch, optimizer, best_acc):
-    state = {
-        'epoch': epoch + 1,
-        'model': model.state_dict(),
-        'best_accuracy': best_acc,
-        'optimizer': optimizer.state_dict(),
-    }
-    torch.save(state, 'best_model_cnn_checkpoint.pth.tar')
-
-train_nn(model=cnn_model, train_loader=train_loader, val_loader=val_loader, criterion=loss_fn, optimizer=optimizer, n_epochs=40)
-
-checkpoint = torch.load('best_model_cnn_checkpoint.pth.tar')
-
-cnn_model.load_state_dict(checkpoint['model'])
+cnn_model = CnnModel(number_of_classes = 4)
 cnn_model = cnn_model.to(device)
+loss_fn = nn.CrossEntropyLoss()
+optimizer = optim.Adam(cnn_model.parameters(), lr=0.001, weight_decay=0.003)
 
-torch.save(cnn_model, 'cnn_model.pth')
-
-
-def show_images_of_given_label(dataset, label):
-    batch_size = 64
-    loader = torch.utils.data.DataLoader(dataset, batch_size, shuffle=True)
-    batch = next(iter(loader))
-    images, labels = batch
-    img = []
-
-    for i in range(batch_size):
-        if labels[i] == label:
-            img.append(images[i])
-    grid = torchvision.utils.make_grid(img, nrow = 5)
-    plt.figure(figsize=(11,11))
-    plt.imshow(np.transpose(grid, (1,2,0)))
-    plt.show()
-    
+train_network(cnn_model, number_of_epoch = 10, train_loader = train_loader, optimizer = optimizer, loss_fn = loss_fn)    
