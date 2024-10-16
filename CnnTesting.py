@@ -11,6 +11,7 @@ import torch.optim as optim
 import math
 import os
 import json
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 with open('test_configuration.json', 'r') as config:
     path = json.load(config)
@@ -110,19 +111,21 @@ class CnnModel(nn.Module):
         x = self.fc3(x)
         return x 
 
-def train_network(model, number_of_epoch, train_loader, optimizer, loss_fn):
+def train_network(model, number_of_epoch, train_loader, val_loader, optimizer, loss_fn):
 
     for epoch in range(number_of_epoch):
 
+        true_labels = []
+        predicted_labels = []
         model.train()
 
         total_loss = 0.0
         total_acc = 0.0
         total = 0
 
-        for data in train_loader:
+        for batch in train_loader:
 
-            drawings, labels = data
+            drawings, labels = batch
             drawings = drawings.to(device)
             labels = labels.type(torch.LongTensor)
             labels = labels.to(device)
@@ -143,14 +146,50 @@ def train_network(model, number_of_epoch, train_loader, optimizer, loss_fn):
 
             total_acc += (labels == predicted).sum().item()
 
+            true_labels.extend(labels.tolist())
+            predicted_labels.extend(predicted.tolist())
+
         epoch_loss = total_loss / len(train_loader)
         epoch_acc = 100 * total_acc / total
+        val_total, val_total_acc, val_epoch_acc = validate_model(model, val_loader)
 
-        print("         -Training dataset. Got %d out of %d images correctly (%.3f%%). Epoch loss: %.3f" % (total_acc, total, epoch_acc, epoch_loss))
+
+
+        print(" __Train dataset__   Number of drawings in epoch: %d, correctly assigned classes: %d, (%.2f%%). Epoch loss: %.4f" % (total, total_acc, epoch_acc, epoch_loss))
+        print("__Validation dataset__   Number of drawings in epoch: %d, correctly assigned classes: %d, (%.2f%%)." % (val_total, val_total_acc, val_epoch_acc))
+
+    cm = confusion_matrix(true_labels, predicted_labels)
+    print(cm)
+
+@torch.no_grad()
+def validate_model(model, val_loader):
+
+    total_acc = 0.0
+    total = 0
+
+    for batch in val_loader:
+
+        drawings, labels = batch
+        drawings = drawings.to(device)
+        labels = labels.type(torch.LongTensor)
+        labels = labels.to(device)
+        total += labels.size(0)
+
+        outputs = model(drawings)
+
+        _, predicted = torch.max(outputs.data, 1)
+
+        total_acc += (labels == predicted).sum().item()
+
+    epoch_acc = 100 * total_acc / total
+
+    return total, total_acc, epoch_acc
+
 
 cnn_model = CnnModel(number_of_classes = 4)
 cnn_model = cnn_model.to(device)
 loss_fn = nn.CrossEntropyLoss()
 optimizer = optim.Adam(cnn_model.parameters(), lr=0.001, weight_decay=0.003)
 
-train_network(cnn_model, number_of_epoch = 10, train_loader = train_loader, optimizer = optimizer, loss_fn = loss_fn)    
+train_network(cnn_model, number_of_epoch = 10, train_loader = train_loader, val_loader = val_loader ,optimizer = optimizer, loss_fn = loss_fn)
+
