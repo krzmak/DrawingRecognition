@@ -12,7 +12,7 @@ import math
 import os
 import json
 
-with open('test_configuration.json', 'r') as config:
+with open('configuration.json', 'r') as config:
     path = json.load(config)
 
 training_data_path = path.get("trainig data path")
@@ -74,11 +74,11 @@ data_transforms = transforms.Compose([
 
 training_dataset = NumpyDrawingsDataset(training_data_path, transform= data_transforms)
 
-training_loader = torch.utils.data.DataLoader(training_dataset, batch_size=64, shuffle=True)
+training_loader = torch.utils.data.DataLoader(training_dataset, batch_size=256, shuffle=True)
 
 def calculate_mean_and_std(loader):
     """
-        Orginal function: 
+        x
     """
     mean = 0.
     std = 0.

@@ -12,6 +12,7 @@ import math
 import os
 import json
 from itertools import product
+from collections import namedtuple
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 from torch.utils.tensorboard import SummaryWriter
@@ -193,21 +194,36 @@ def validate_model(model, val_loader):
 
     return total, total_acc, epoch_acc
 
+class Run():
+    @staticmethod
+    def make_runs(parameters):
+        run = namedtuple('run', parameters.keys())
 
-cnn_model = CnnModel(number_of_classes = 4)
-cnn_model = cnn_model.to(device)
-loss_fn = nn.CrossEntropyLoss()
+        runs = []
+        for x in product(*parameters.values()):
+            runs.append(run(*x))
+
+        return runs        
+
+
 
 parm = dict(
-    lr = [0.0001, 0.001, 0.01],
-    wd = [0.0003, 0.003, 0.01]
+    lr = [1e-3, 1e-2, 0.1],
+    wd = [3e-5, 3e-4, 3e-3],
+    opt = ['sgd', 'adam']
 )
 
-parm_val = [x for x in parm.values()]
 
 
-for lr, wd in product(*parm_val):
-    comment = f' lr = {lr} weight_decay = {wd}'
-    optimizer = optim.Adam(cnn_model.parameters(), lr=lr, weight_decay=wd)
-    train_network(cnn_model, number_of_epoch = 10, train_loader = train_loader, val_loader = val_loader ,optimizer = optimizer, loss_fn = loss_fn)
+
+for run in Run.make_runs(parm):
+    cnn_model = CnnModel(number_of_classes = 4)
+    cnn_model = cnn_model.to(device)
+    loss_fn = nn.CrossEntropyLoss()
+    comment = f'-{run}'
+    if run.opt == 'adam':
+        optimizer = optim.Adam(cnn_model.parameters(), lr=run.lr, weight_decay=run.wd)
+    if run.opt == 'sgd':
+        optimizer = optim.SGD(cnn_model.parameters(), lr=run.lr, weight_decay=run.wd)
+    train_network(cnn_model, number_of_epoch = 40, train_loader = train_loader, val_loader = val_loader ,optimizer = optimizer, loss_fn = loss_fn)
 
