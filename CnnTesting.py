@@ -121,7 +121,7 @@ def train_network(model, number_of_epoch, train_loader, val_loader, optimizer, l
 
     max_acc = 0
     
-    with open('data2.csv', mode='w', newline='') as file:
+    with open('data4.csv', mode='w', newline='') as file:
         writer = csv.writer(file)
         
         writer.writerow(['Epoch', 'Train Total', 'Train Correct', 'Train Accuracy', 'Loss', 
@@ -225,20 +225,20 @@ def save_checkpoint(model, epoch, optimizer, best_acc):
         'best_accuracy': best_acc,
         'optimizer': optimizer.state_dict(),
     }
-    torch.save(state, 'model2_checkpoint.pth.tar')
+    torch.save(state, 'model4_checkpoint.pth.tar')
 
 
 cnn_model = CnnModel()
 cnn_model = cnn_model.to(device)
 loss_fn = nn.CrossEntropyLoss()
-optimizer = optim.Adam(cnn_model.parameters(), lr=1e-4, weight_decay=0.003)
+optimizer = optim.Adam(cnn_model.parameters(), lr=1e-5, weight_decay=0.003)
 
-train_network(cnn_model, number_of_epoch = 100, train_loader = train_loader, val_loader = val_loader ,optimizer = optimizer, loss_fn = loss_fn)
+train_network(cnn_model, number_of_epoch = 20, train_loader = train_loader, val_loader = val_loader ,optimizer = optimizer, loss_fn = loss_fn)
 
-checkpoint = torch.load('model2_checkpoint.pth.tar')
+checkpoint = torch.load('model4_checkpoint.pth.tar')
 
 cnn_model = CnnModel()
 cnn_model.load_state_dict(checkpoint['model'])
 cnn_model = cnn_model.to(device)
 
-torch.save(cnn_model, 'model_v2.pth')
+torch.save(cnn_model, 'model_v4.pth')

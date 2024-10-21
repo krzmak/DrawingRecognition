@@ -92,5 +92,38 @@ def show_images_of_given_label(dataset, label):
     plt.figure(figsize=(11,11))
     plt.imshow(np.transpose(grid, (1,2,0)))
     plt.show()
-    
-show_images_of_given_label(training_dataset, 4)
+
+def show_images(dataset):
+    batch_size = 100
+    loader = torch.utils.data.DataLoader(dataset, batch_size, shuffle=True)
+    batch = next(iter(loader))
+    images, labels = batch
+ 
+    grid = torchvision.utils.make_grid(images, nrow = 10)
+    plt.figure(figsize=(11,11))
+    plt.imshow(np.transpose(grid, (1,2,0)))
+    plt.show()
+
+
+#experimental func
+
+def save_and_show_single_image_from_validation(dataset, index=0, save_path="image.npy"):
+    # Select the image at the given index from the validation dataset
+    image, label = dataset[index]
+
+    # Display the image using matplotlib
+    plt.figure(figsize=(6, 6))
+    plt.imshow(image.numpy().squeeze(), cmap="gray")
+    plt.title(f"Label: {label}")
+    plt.axis("off")
+    plt.show()
+
+    # Save the image as a numpy array with the specified dimensions (64x64)
+    np.save(save_path, image.numpy().squeeze())
+    print(f"Image saved at {save_path}")
+
+# Calling the function to display and save an image from the validation dataset
+save_and_show_single_image_from_validation(validation_dataset, index=6001, save_path="image.npy")
+
+
+show_images(training_dataset)
