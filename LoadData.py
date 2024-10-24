@@ -108,21 +108,17 @@ def show_images(dataset):
 #experimental func
 
 def save_and_show_single_image_from_validation(dataset, index=0, save_path="image.npy"):
-    # Select the image at the given index from the validation dataset
     image, label = dataset[index]
 
-    # Display the image using matplotlib
     plt.figure(figsize=(6, 6))
     plt.imshow(image.numpy().squeeze(), cmap="gray")
     plt.title(f"Label: {label}")
     plt.axis("off")
     plt.show()
 
-    # Save the image as a numpy array with the specified dimensions (64x64)
     np.save(save_path, image.numpy().squeeze())
     print(f"Image saved at {save_path}")
 
-# Calling the function to display and save an image from the validation dataset
 save_and_show_single_image_from_validation(validation_dataset, index=6001, save_path="image.npy")
 
 

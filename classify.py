@@ -85,4 +85,4 @@ def classify(model, drawing, classes, transform, device):
     plt.axis("off")
     plt.show()
 
-classify(model, 'img9.npy', classes, transform, device)
+classify(model, 'img10.npy', classes, transform, device)
