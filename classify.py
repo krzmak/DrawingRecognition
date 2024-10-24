@@ -39,62 +39,50 @@ classes = [
     'The Eiffel Tower', 'umbrella'
 ]
 
-# Załaduj model
 model = torch.load('model_v3.pth')
-model.eval()  # Przełączenie modelu w tryb oceny
+model.eval() 
 
 mean = [0.1765]
 std = [0.3540]
 
-#experimental func
-
-def classify_image(model, image_path, classes, mean, std, device=None):
-    # Determine the device (CPU or CUDA)
-    if device is None:
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    
-    # Move the model to the appropriate device
-    model.to(device)
-
-    # Load the image as a numpy array
-    image = np.load(image_path)
-
-    # Transform the image to match the model's expected input
-    transform = transforms.Compose([
+transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize(mean, std)
     ])
 
-    # Apply the transform to the image
-    image_tensor = transform(image).unsqueeze(0)  # Add batch dimension
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # Move the input tensor to the same device as the model
-    image_tensor = image_tensor.to(device)
+def classify(model, drawing, classes, transform, device):
 
-    # Send the image to the model and make predictions
+    model.to(device)
+
+    drawing = np.load(drawing)
+
+    #byc moze do edycji    
+    drawing = drawing.squeeze()
+
+    drawing_tensor = transform(drawing).unsqueeze(0)
+
+    drawing_tensor = drawing_tensor.to(device)
+
     with torch.no_grad():
-        output = model(image_tensor)
-
-    # Get the probabilities for each class
+        output = model(drawing_tensor)
+    
     probabilities = F.softmax(output, dim=1)
-    probabilities = probabilities.cpu().numpy().squeeze()  # Move to CPU and convert to numpy array
+    probabilities = probabilities.cpu().numpy().squeeze()
 
-    # Get the predicted class
     predicted_class = classes[np.argmax(probabilities)]
 
-    # Display the probabilities for all classes
     print("Class probabilities:")
     for i, prob in enumerate(probabilities):
         print(f"{classes[i]}: {prob:.4f}")
 
     print(f"\nPredicted Class: {predicted_class}")
 
-    # Display the image
     plt.figure(figsize=(6, 6))
-    plt.imshow(image, cmap="gray")
+    plt.imshow(drawing, cmap="gray")
     plt.title(f"Predicted Class: {predicted_class}")
     plt.axis("off")
     plt.show()
 
-# Call the function to classify the saved image
-classify_image(model, 'image.npy', classes, mean, std)
+classify(model, 'img9.npy', classes, transform, device)
