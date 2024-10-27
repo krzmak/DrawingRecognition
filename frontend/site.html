@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Aplikacja webowa do rozpoznawania rysunków odręcznych</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* Style the top navigation bar */
+    .topnav {
+      overflow: hidden;
+      background-color: #333;
+    }
+
+    /* Style the topnav links */
+    .topnav a {
+      float: left;
+      display: block;
+      color: #f2f2f2;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+    }
+
+    /* Change color on hover */
+    .topnav a:hover {
+      background-color: #ddd;
+      color: black;
+    }
+
+    /* Style the content */
+    .content {
+      background-color: #ddd;
+      padding: 10px;
+      height: 800px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    /* Style the canvas */
+    canvas {
+      border: 4px solid black;
+      background-color: #ffffff;
+      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Style the footer */
+    .footer {
+      background-color: #f1f1f1;
+      padding: 100px;
+      text-align: center;
+    }
+
+    .button {
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+
+    .button2 {
+      background-color: #04AA6D;
+    }
+
+    .button2:hover {
+      background-color: #4ec053; 
+    }
+  </style>
+</head>
+<body>
+
+<div class="topnav">
+
+</div>
+
+<div class="content">
+  <h2>Aplikacja webowa do rozpoznawania rysunków odręcznych</h2>
+  <!-- Okno canvas -->
+  <canvas id="myCanvas" width="512" height="512"></canvas>
+  <br>
+  <button class="button button2">Classify Drawing</button>
+</div>
+
+<div class="footer">
+  <p id="result">Predicted Class: </p>
+  <p id="probabilities"></p>
+</div>
+
+<!-- Importujemy plik script.js -->
+<script src="canvas.js"></script>
+
+</body>
+</html>
