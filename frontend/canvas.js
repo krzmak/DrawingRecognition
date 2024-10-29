@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function saveDrawingAndClassify(event) {
-    event.preventDefault();  // Prevent any default action
+    event.preventDefault();
 
     const data = JSON.stringify(paths);
 
@@ -71,14 +71,15 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .then(response => response.json())
     .then(result => {
-      console.log(result);  // Log the response to check if it's received correctly
-
-      // Display the predicted class
+    
       document.getElementById('result').textContent = `Predicted Class: ${result.predicted_class}`;
 
-      // Display class probabilities
       if (result.class_probabilities) {
-        const probabilitiesText = Object.entries(result.class_probabilities)
+        const sortedProbabilities = Object.entries(result.class_probabilities)
+          .sort(([, probA], [, probB]) => probB - probA)
+          .slice(0, 5);
+    
+        const probabilitiesText = sortedProbabilities
           .map(([className, probability]) => `${className}: ${(probability * 100).toFixed(2)}%`)
           .join('<br>');
         document.getElementById('probabilities').innerHTML = `<strong>Class Probabilities:</strong><br>${probabilitiesText}`;
@@ -88,4 +89,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   document.querySelector('.button2').addEventListener('click', saveDrawingAndClassify);
+  document.querySelector('.button3').addEventListener('click', function() {
+    location.reload();
+  });
+
 });

@@ -80,13 +80,7 @@ def classify(model, drawing, classes, transform, device):
 
     class_probabilities = {classes[i]: float(prob) for i, prob in enumerate(probabilities)}
 
-    print("Class probabilities:")
-    for i, prob in enumerate(probabilities):
-        print(f"{classes[i]}: {prob:.4f}")
-
-    print(f"\nPredicted Class: {predicted_class}")
-
-    return predicted_class, class_probabilities    
+    return predicted_class, class_probabilities   
 
 app = Flask(__name__, static_folder='../frontend')
 CORS(app)  # Enable CORS to allow frontend-backend communication
