@@ -4,3 +4,6 @@ test_configuration.json
 testing/
 test.py
 runs/
+all_models/
+csv_data/
+models_checkpoint/
