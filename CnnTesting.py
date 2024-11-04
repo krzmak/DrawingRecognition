@@ -48,17 +48,17 @@ val_loader = torch.utils.data.DataLoader(validation_dataset, batch_size=256, shu
 
 
 cnn_model = CnnModel()
-network_oper = NetworkOperations(cnn_model, check_point_name= 'model5_checkpoint.pth.tar')
+network_oper = NetworkOperations(cnn_model, check_point_name= 'model6_checkpoint.pth.tar') #if you waant new model change to model 7
 cnn_model = cnn_model.to(device)
 loss_fn = nn.CrossEntropyLoss()
 optimizer = optim.Adam(cnn_model.parameters(), lr=1e-5, weight_decay=0.003)
 
-network_oper.train_network(number_of_epoch = 20, train_loader = train_loader, val_loader = val_loader ,optimizer = optimizer, loss_fn = loss_fn, csv_save_path= 'data4.csv')
+network_oper.train_network(number_of_epoch = 30, train_loader = train_loader, val_loader = val_loader ,optimizer = optimizer, loss_fn = loss_fn, csv_save_path= 'data6.csv')
 
-checkpoint = torch.load('model5_checkpoint.pth.tar')
+checkpoint = torch.load('model6_checkpoint.pth.tar') #if you waant new model change to model 7
 
 cnn_model = CnnModel()
 cnn_model.load_state_dict(checkpoint['model'])
 cnn_model = cnn_model.to(device)
 
-torch.save(cnn_model, 'model_v5.pth')
+torch.save(cnn_model, 'model_v6.pth') #if you waant new model change to model 7

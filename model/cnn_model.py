@@ -23,7 +23,7 @@ class CnnModel(nn.Module):
         x = F.relu(self.conv4(x))
         x = self.pool(F.relu(self.conv5(x)))
         x = x.view(-1, 128 * 8 * 8)
-        x = self.dropout(F.relu(self.fc1(x)))
-        x = self.dropout(F.relu(self.fc2(x)))
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
         x = self.fc3(x)
         return x

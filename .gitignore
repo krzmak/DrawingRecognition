@@ -7,3 +7,4 @@ runs/
 all_models/
 csv_data/
 models_checkpoint/
+temp_drawing.npy
