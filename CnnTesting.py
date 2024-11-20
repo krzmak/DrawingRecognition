@@ -35,7 +35,6 @@ std = [0.3540]
 
 data_transforms = transforms.Compose([
     transforms.ToTensor(),
-    transforms.Normalize(torch.tensor(mean),torch.tensor(std))
 ])
 
 training_dataset = NumpyDrawingsDataset(training_data_path, transform= data_transforms)
@@ -48,17 +47,17 @@ val_loader = torch.utils.data.DataLoader(validation_dataset, batch_size=256, shu
 
 
 cnn_model = CnnModel()
-network_oper = NetworkOperations(cnn_model, check_point_name= 'model7_checkpoint.pth.tar') #if you waant new model change to model 8
+network_oper = NetworkOperations(cnn_model, check_point_name= 'model11_checkpoint.pth.tar') #if you waant new model change to model 12
 cnn_model = cnn_model.to(device)
 loss_fn = nn.CrossEntropyLoss()
 optimizer = optim.SGD(cnn_model.parameters(), lr=1e-2, weight_decay=0.0005)
 
-network_oper.train_network(number_of_epoch = 20, train_loader = train_loader, val_loader = val_loader ,optimizer = optimizer, loss_fn = loss_fn, csv_save_path= 'data7.csv') #if you waant new model change to data 8
+network_oper.train_network(number_of_epoch = 20, train_loader = train_loader, val_loader = val_loader ,optimizer = optimizer, loss_fn = loss_fn, csv_save_path= 'data11.csv') #if you waant new model change to data 12
 
-checkpoint = torch.load('model7_checkpoint.pth.tar') #if you waant new model change to model 8
+checkpoint = torch.load('model11_checkpoint.pth.tar') #if you waant new model change to model 12
 
 cnn_model = CnnModel()
 cnn_model.load_state_dict(checkpoint['model'])
 cnn_model = cnn_model.to(device)
 
-torch.save(cnn_model, 'model_v7.pth') #if you waant new model change to model 8
+torch.save(cnn_model, 'model_v11.pth') #if you waant new model change to model 12

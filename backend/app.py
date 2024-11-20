@@ -44,7 +44,7 @@ classes = [
     'The Eiffel Tower', 'umbrella'
 ]
 
-model = torch.load('model_v3.pth')
+model = torch.load('all_models/model_v3.pth')
 model.eval() 
 
 mean = [0.1765]
