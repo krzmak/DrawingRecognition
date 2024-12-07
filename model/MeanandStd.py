@@ -103,7 +103,6 @@ def show_images_of_given_label(dataset, label):
     batch = next(iter(loader))
     images, labels = batch
     img = []
-
     for i in range(batch_size):
         if labels[i] == label:
             img.append(images[i])
@@ -111,5 +110,5 @@ def show_images_of_given_label(dataset, label):
     plt.figure(figsize=(11,11))
     plt.imshow(np.transpose(grid, (1,2,0)))
     plt.show()
-    
+ 
 print(calculate_mean_and_std(training_loader))

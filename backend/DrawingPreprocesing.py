@@ -113,7 +113,6 @@ def vector_to_raster(vector_images, side=64, line_diameter=16, padding=16, bg_co
     return raster_images
 
 def display_raster_images(raster_images, side):
-    # Create subplots based on the number of raster images
     if len(raster_images) == 1:
         fig, ax = plt.subplots(1, 1, figsize=(10, 10))
         ax.imshow(raster_images[0].reshape((side, side)), cmap='gray')

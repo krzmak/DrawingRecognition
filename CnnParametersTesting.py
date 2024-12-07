@@ -208,8 +208,7 @@ class Run():
 
 
 parm = dict(
-    lr = [1e-3, 1e-2, 0.1],
-    wd = [3e-5, 3e-4, 3e-3],
+    lr = [1e-5, 1e-4, 1e-3, 1e-2],
     opt = ['sgd', 'adam']
 )
 
@@ -222,8 +221,8 @@ for run in Run.make_runs(parm):
     loss_fn = nn.CrossEntropyLoss()
     comment = f'-{run}'
     if run.opt == 'adam':
-        optimizer = optim.Adam(cnn_model.parameters(), lr=run.lr, weight_decay=run.wd)
+        optimizer = optim.Adam(cnn_model.parameters(), lr=run.lr, weight_decay=0.003)
     if run.opt == 'sgd':
-        optimizer = optim.SGD(cnn_model.parameters(), lr=run.lr, weight_decay=run.wd)
+        optimizer = optim.SGD(cnn_model.parameters(), lr=run.lr, weight_decay=0.0005)
     train_network(cnn_model, number_of_epoch = 40, train_loader = train_loader, val_loader = val_loader ,optimizer = optimizer, loss_fn = loss_fn)
 

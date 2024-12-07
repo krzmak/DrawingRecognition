@@ -93,6 +93,27 @@ def show_images_of_given_label(dataset, label):
     plt.imshow(np.transpose(grid, (1,2,0)))
     plt.show()
 
+def show_images_of_multiple_labels(dataset, label, max_images):
+    batch_size = 1024
+    loader = torch.utils.data.DataLoader(dataset, batch_size, shuffle=True)
+    batch = next(iter(loader))
+    images, labels = batch
+    img = []
+    
+    count = 0 
+    for i in range(batch_size):
+        if labels[i] in label:
+            img.append(images[i])
+            count += 1
+            if count >= max_images:
+                break
+    
+    grid = torchvision.utils.make_grid(img, nrow=10)
+    plt.figure(figsize=(11,11))
+    plt.imshow(np.transpose(grid, (1, 2, 0)))
+    plt.show()
+
+
 def show_images(dataset):
     batch_size = 100
     loader = torch.utils.data.DataLoader(dataset, batch_size, shuffle=True)
@@ -119,7 +140,10 @@ def save_and_show_single_image_from_validation(dataset, index=0, save_path="imag
     np.save(save_path, image.numpy().squeeze())
     print(f"Image saved at {save_path}")
 
-save_and_show_single_image_from_validation(validation_dataset, index=6001, save_path="image.npy")
+#save_and_show_single_image_from_validation(validation_dataset, index=6001, save_path="image.npy")
 
+test = [4,9,11]
 
 show_images(training_dataset)
+show_images_of_given_label(training_dataset, 4)
+show_images_of_multiple_labels(validation_dataset, test, 50)
