@@ -51,8 +51,12 @@ classes = [
     'The Eiffel Tower', 'umbrella'
 ]
 
-model = torch.load('all_models/model_v10.pth')
-model.eval() 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = CnnModel()
+model = torch.load('model_v10.pth', map_location=device)
+model.to(device)
+model.eval()
+
 
 transform = transforms.Compose([
         transforms.ToTensor(),
