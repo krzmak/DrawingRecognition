@@ -3,8 +3,6 @@ import json
 import cairocffi as cairo
 import matplotlib.pyplot as plt
 
-
-
 #Align the drawing to the top-left corner, to have minimum values of 0
 
 def align_to_top_left(drawing_data):

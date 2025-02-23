@@ -1,12 +1,11 @@
 # Created by Krzysztof Mak for final engineering project at Politechnika Wrocławska
 
 import numpy as np
-import math
 import matplotlib.pyplot as plt
 import os
 import json
 
-with open('test_configuration.json', 'r') as config:
+with open('configuration.json', 'r') as config:
     location = json.load(config)
 
 training_data_path = location.get("trainig data path")
