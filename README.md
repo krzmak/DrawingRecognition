@@ -42,7 +42,7 @@ Frontend
 
 Step 1: Clone the Repository
 ``` bash
-git clone <[url](https://github.com/krzmak/DrawingRecognition.git)>
+git clone <https://github.com/krzmak/DrawingRecognition.git>
 cd DrawingRecognition
 ```
 Step 2: Set Up a Virtual Environment (Recommended)
@@ -64,7 +64,7 @@ python app.py
 This will start the backend at http://127.0.0.1:5000/.
 
 Step 6: Run the Frontend
-- The frontend is a static HTML/JS page, so you can simply open frontend/site.html in a browser.
+- The frontend is a static HTML/JS page, so you can simply open **`frontend/site.html`** in a browser.
 
 ## Creating new models
   If you want to edit existing model or train model on new data you are welcome to do so
