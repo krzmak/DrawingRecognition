@@ -3,10 +3,10 @@
 Web app for interactive drawing and drawing recogintion using custom Cnn_model trained on [quickdraw-dataset](https://github.com/googlecreativelab/quickdraw-dataset)
 
 ## Contents
-- [Info](#Info)
-- [Tech](#Tech)
-- [Installation & Running Locally](#Installation & Running Locally)
-- [Creating new models](#Creating new models)
+- [Info](#info)
+- [Tech](#tech)
+- [Installation & Running Locally](#installation--running-locally)
+- [Creating New Models](#creating-new-models)
 
 ## Info
 
