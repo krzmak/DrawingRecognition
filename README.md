@@ -42,8 +42,8 @@ Frontend
 
 Step 1: Clone the Repository
 ``` bash
-git clone <url>
-cd project-root
+git clone <[url](https://github.com/krzmak/DrawingRecognition.git)>
+cd DrawingRecognition
 ```
 Step 2: Set Up a Virtual Environment (Recommended)
 ``` bash
